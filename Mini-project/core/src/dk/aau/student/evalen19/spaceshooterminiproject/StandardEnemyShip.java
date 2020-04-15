@@ -70,6 +70,13 @@ public class StandardEnemyShip {
         return this.explosionEffect;
     }
 
+    public void despawnHurtbox(){
+        getHurtbox().x = 0;
+        getHurtbox().y = 0;
+        getHurtbox().width = 0;
+        getHurtbox().height = 0;
+    }
+
     public boolean isDespawned(){
         return enemyBoostEffect.isComplete();
     }

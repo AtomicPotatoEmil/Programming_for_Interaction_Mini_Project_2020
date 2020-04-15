@@ -59,7 +59,7 @@ public class GameScreen implements Screen {
         standardEnemySpawnTime -= Gdx.graphics.getDeltaTime();
         if (standardEnemySpawnTime <= 0){
             standardEnemyShips.add(new StandardEnemyShip(MathUtils.random(0, 720 - 64), 1080, 64, 64, true));
-            standardEnemySpawnTime = MathUtils.random(1, 300);
+            standardEnemySpawnTime = MathUtils.random(1, 200);
         }
 
         if (playerController.getAccelerationZ() > 8){
@@ -86,11 +86,12 @@ public class GameScreen implements Screen {
             }
             for (StandardEnemyShip standardEnemy : standardEnemyShips){
                 if (bullet.getHitbox().overlaps(standardEnemy.getHurtbox())){
-                    playerBulletsToRemove.add(bullet);
                     standardEnemy.setIsAlive(false);
+                    standardEnemy.despawnHurtbox();
                     standardEnemy.getStandardEnemyShipImage().dispose();
                     standardEnemy.getEnemyBoostEffect().dispose();
                     bullet.getPlayerBulletImage().dispose();
+                    playerBulletsToRemove.add(bullet);
                 }
             }
         }
