@@ -26,6 +26,9 @@ public class GameScreen implements Screen {
     private ArrayList<StandardEnemyShip> standardEnemyShipsToRemove;
     private int standardEnemySpawnTime = MathUtils.random(1, 30);
 
+    private ArrayList<EnemyBullet> enemyBullets;
+    private ArrayList<EnemyBullet> enemyBulletsToRemove;
+
 
     public GameScreen(GameState gameState){
         this.gameState = gameState;
@@ -46,6 +49,9 @@ public class GameScreen implements Screen {
 
         standardEnemyShips = new ArrayList<StandardEnemyShip>();
         standardEnemyShipsToRemove = new ArrayList<StandardEnemyShip>();
+
+        enemyBullets = new ArrayList<EnemyBullet>();
+        enemyBulletsToRemove = new ArrayList<>();
     }
 
     @Override
@@ -81,8 +87,8 @@ public class GameScreen implements Screen {
         for (PlayerBullet bullet : playerBullets){
             bullet.updateBullet(600);
             if (bullet.getPositionY() > 1080){
-                playerBulletsToRemove.add(bullet);
                 bullet.getPlayerBulletImage().dispose();
+                playerBulletsToRemove.add(bullet);
             }
             for (StandardEnemyShip standardEnemy : standardEnemyShips){
                 if (bullet.getHitbox().overlaps(standardEnemy.getHurtbox())){
@@ -107,17 +113,37 @@ public class GameScreen implements Screen {
                 standardEnemyShipsToRemove.add(ship);
                 ship.getExplosionEffect().dispose();
             }
+            ship.shootTimer();
+            if (ship.getIsShooting() && ship.getIsAlive()){
+                enemyBullets.add(new EnemyBullet(ship.getPositionX() + 32, ship.getPositionY() - 32, 16, 32));
+            }
+        }
+
+        for (EnemyBullet bullet : enemyBullets){
+            bullet.updateBullet(-300);
+            if (bullet.getPositionY() > 1080){
+                bullet.getEnemyBulletImage().dispose();
+                enemyBulletsToRemove.add(bullet);
+            }
+            if (bullet.getHitbox().overlaps(playerShip.getHurtbox())){
+                System.out.println("hit");
+            }
         }
 
 
         playerBullets.removeAll(playerBulletsToRemove);
         standardEnemyShips.removeAll(standardEnemyShipsToRemove);
+        enemyBullets.removeAll(enemyBulletsToRemove);
 
         batch.begin();
         background.drawBackground(batch, 1080, 1080);
         for (PlayerBullet bullet : playerBullets){
             bullet.drawBullet(batch);
         }
+        for (EnemyBullet bullet : enemyBullets){
+            bullet.drawBullet(batch);
+        }
+
         for (StandardEnemyShip ship : standardEnemyShips){
             ship.drawStandardEnemyShip(batch);
         }

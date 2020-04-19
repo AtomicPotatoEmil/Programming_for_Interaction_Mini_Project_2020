@@ -1,22 +1,22 @@
 package dk.aau.student.evalen19.spaceshooterminiproject;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class PlayerBullet {
+
+public class EnemyBullet {
+    private Texture enemyBulletImage;
     private Rectangle hitbox;
-    private Texture playerBulletImage;
     private int positionX;
     private int positionY;
     private int width;
     private int height;
 
-    public PlayerBullet(int x, int y, int width, int height){
+    public EnemyBullet(int x, int y, int width, int height){
+        this.enemyBulletImage = new Texture(Gdx.files.internal("enemyBullet.png"));
         this.hitbox = new Rectangle(x, y, width, height);
-        this.playerBulletImage = new Texture(Gdx.files.internal("playerBullet.png"));
         this.positionX = x;
         this.positionY = y;
         this.width = width;
@@ -27,20 +27,27 @@ public class PlayerBullet {
         positionY += speed * Gdx.graphics.getDeltaTime();
         hitbox.y = positionY;
         if (positionY > 1080){
-            playerBulletImage.dispose();
+            enemyBulletImage.dispose();
         }
     }
 
+    public void despawnHitbox(){
+        getHitbox().x = 0;
+        getHitbox().y = 0;
+        getHitbox().width = 0;
+        getHitbox().height = 0;
+    }
+
     public void drawBullet(SpriteBatch batch){
-        batch.draw(getPlayerBulletImage(), getPositionX(), getPositionY(), getWidth(), getHeight());
+        batch.draw(getEnemyBulletImage(), getPositionX(), getPositionY(), getWidth(), getHeight());
+    }
+
+    public Texture getEnemyBulletImage(){
+        return this.enemyBulletImage;
     }
 
     public Rectangle getHitbox(){
         return this.hitbox;
-    }
-
-    public Texture getPlayerBulletImage(){
-        return this.playerBulletImage;
     }
 
     public int getPositionX(){
@@ -58,5 +65,4 @@ public class PlayerBullet {
     public int getHeight(){
         return this.height;
     }
-
 }

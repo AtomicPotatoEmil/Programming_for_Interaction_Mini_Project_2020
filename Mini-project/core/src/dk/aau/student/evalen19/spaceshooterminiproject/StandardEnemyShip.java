@@ -17,6 +17,8 @@ public class StandardEnemyShip {
     private int positionY;
     private int width;
     private int height;
+    private boolean isShooting = false;
+    private int shootTime = 20;
 
     public StandardEnemyShip(int x, int y, int width, int height, boolean status){
         this.standardEnemyShipImage = new Texture(Gdx.files.internal("standardEnemy.png"));
@@ -39,6 +41,20 @@ public class StandardEnemyShip {
     public void movePositionY(int speed){
         positionY += speed * Gdx.graphics.getDeltaTime();
         hurtbox.y = positionY;
+        if (positionY > 1080){
+            standardEnemyShipImage.dispose();
+            enemyBoostEffect.dispose();
+        }
+    }
+
+    public void shootTimer(){
+        shootTime -= Gdx.graphics.getDeltaTime();
+        if (shootTime <= 0){
+            isShooting = true;
+            shootTime = 200;
+        }else {
+           isShooting = false;
+        }
     }
 
     public void drawStandardEnemyShip(SpriteBatch batch){
@@ -104,5 +120,10 @@ public class StandardEnemyShip {
     public int getHeight(){
         return this.height;
     }
+
+    public boolean getIsShooting(){
+        return this.isShooting;
+    }
+
 
 }
