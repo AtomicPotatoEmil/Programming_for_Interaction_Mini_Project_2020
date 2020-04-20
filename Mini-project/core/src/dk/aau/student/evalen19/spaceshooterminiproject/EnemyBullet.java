@@ -26,7 +26,7 @@ public class EnemyBullet {
     public void updateBullet(int speed){
         positionY += speed * Gdx.graphics.getDeltaTime();
         hitbox.y = positionY;
-        if (positionY > 1080){
+        if (positionY < -32){
             enemyBulletImage.dispose();
         }
     }

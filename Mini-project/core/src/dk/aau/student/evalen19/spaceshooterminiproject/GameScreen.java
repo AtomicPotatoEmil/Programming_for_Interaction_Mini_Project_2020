@@ -121,11 +121,13 @@ public class GameScreen implements Screen {
 
         for (EnemyBullet bullet : enemyBullets){
             bullet.updateBullet(-300);
-            if (bullet.getPositionY() > 1080){
+            if (bullet.getPositionY() < -32){
                 bullet.getEnemyBulletImage().dispose();
                 enemyBulletsToRemove.add(bullet);
             }
             if (bullet.getHitbox().overlaps(playerShip.getHurtbox())){
+                bullet.getEnemyBulletImage().dispose();
+                enemyBulletsToRemove.add(bullet);
                 System.out.println("hit");
             }
         }

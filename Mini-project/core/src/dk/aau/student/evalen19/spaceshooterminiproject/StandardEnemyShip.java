@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 
@@ -41,7 +42,7 @@ public class StandardEnemyShip {
     public void movePositionY(int speed){
         positionY += speed * Gdx.graphics.getDeltaTime();
         hurtbox.y = positionY;
-        if (positionY > 1080){
+        if (positionY < -64){
             standardEnemyShipImage.dispose();
             enemyBoostEffect.dispose();
         }
@@ -51,7 +52,7 @@ public class StandardEnemyShip {
         shootTime -= Gdx.graphics.getDeltaTime();
         if (shootTime <= 0){
             isShooting = true;
-            shootTime = 200;
+            shootTime = MathUtils.random(50, 200);
         }else {
            isShooting = false;
         }
