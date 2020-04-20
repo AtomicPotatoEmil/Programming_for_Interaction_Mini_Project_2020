@@ -29,6 +29,10 @@ public class GameScreen implements Screen {
     private ArrayList<EnemyBullet> enemyBullets;
     private ArrayList<EnemyBullet> enemyBulletsToRemove;
 
+    private ArrayList<Meteor> meteors;
+    private ArrayList<Meteor> meteorsToRemove;
+    private int meteorRightSpawnTime = MathUtils.random(1, 30);
+    private int meteorLeftSpawnTime = MathUtils.random(1, 30);
 
     public GameScreen(GameState gameState){
         this.gameState = gameState;
@@ -42,7 +46,7 @@ public class GameScreen implements Screen {
 
         background = new ScrollingBackground(0, 0);
 
-        playerShip = new PlayerShip(300, 300, 64, 64);
+        playerShip = new PlayerShip(300, 300, 64, 64, true);
         playerController = new PlayerController();
         playerBullets = new ArrayList<PlayerBullet>();
         playerBulletsToRemove = new ArrayList<PlayerBullet>();
@@ -52,6 +56,9 @@ public class GameScreen implements Screen {
 
         enemyBullets = new ArrayList<EnemyBullet>();
         enemyBulletsToRemove = new ArrayList<>();
+
+        meteors = new ArrayList<Meteor>();
+        meteorsToRemove = new ArrayList<Meteor>();
     }
 
     @Override
@@ -66,6 +73,16 @@ public class GameScreen implements Screen {
         if (standardEnemySpawnTime <= 0){
             standardEnemyShips.add(new StandardEnemyShip(MathUtils.random(0, 720 - 64), 1080, 64, 64, true));
             standardEnemySpawnTime = MathUtils.random(1, 200);
+        }
+        meteorRightSpawnTime -= Gdx.graphics.getDeltaTime();
+        if (meteorRightSpawnTime <= 0){
+            meteors.add(new Meteor(-64, MathUtils.random(0, 1080 - 64), 64, 64, true));
+            meteorRightSpawnTime = MathUtils.random(150, 200);
+        }
+        meteorLeftSpawnTime -= Gdx.graphics.getDeltaTime();
+        if (meteorLeftSpawnTime <= 0){
+            meteors.add(new Meteor(1080 + 64, MathUtils.random(0, 1080 - 64), 64, 64, false));
+            meteorLeftSpawnTime = MathUtils.random(150, 200);
         }
 
         if (playerController.getAccelerationZ() > 8){
@@ -128,7 +145,19 @@ public class GameScreen implements Screen {
             if (bullet.getHitbox().overlaps(playerShip.getHurtbox())){
                 bullet.getEnemyBulletImage().dispose();
                 enemyBulletsToRemove.add(bullet);
-                System.out.println("hit");
+                playerShip.setAlive(false);
+            }
+        }
+
+        for (Meteor meteor : meteors){
+            meteor.updateMeteor(200);
+            if (meteor.getPositionX() < -100 || meteor.getPositionX() > 1180){
+                meteor.getMeteorImage().dispose();
+                meteor.getFlame().dispose();
+                meteorsToRemove.add(meteor);
+            }
+            if (meteor.getCollisionbox().overlaps(playerShip.getHurtbox())){
+                playerShip.setAlive(false);
             }
         }
 
@@ -136,9 +165,13 @@ public class GameScreen implements Screen {
         playerBullets.removeAll(playerBulletsToRemove);
         standardEnemyShips.removeAll(standardEnemyShipsToRemove);
         enemyBullets.removeAll(enemyBulletsToRemove);
+        meteors.removeAll(meteorsToRemove);
 
         batch.begin();
         background.drawBackground(batch, 1080, 1080);
+        for (Meteor meteor : meteors){
+            meteor.drawMeteor(batch);
+        }
         for (PlayerBullet bullet : playerBullets){
             bullet.drawBullet(batch);
         }

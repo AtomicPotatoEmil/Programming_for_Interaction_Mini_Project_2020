@@ -13,7 +13,7 @@ public class StandardEnemyShip {
     private Rectangle hurtbox;
     private ParticleEffect enemyBoostEffect;
     private ParticleEffect explosionEffect;
-    private boolean isAlive;
+    private boolean alive;
     private int positionX;
     private int positionY;
     private int width;
@@ -21,7 +21,7 @@ public class StandardEnemyShip {
     private boolean isShooting = false;
     private int shootTime = 20;
 
-    public StandardEnemyShip(int x, int y, int width, int height, boolean status){
+    public StandardEnemyShip(int x, int y, int width, int height, boolean alive){
         this.standardEnemyShipImage = new Texture(Gdx.files.internal("standardEnemy.png"));
         this.hurtbox = new Rectangle(x, y, width, height);
         this.enemyBoostEffect = new ParticleEffect();
@@ -36,7 +36,7 @@ public class StandardEnemyShip {
         this.positionY = y;
         this.width = width;
         this.height = height;
-        this.isAlive = status;
+        this.alive = alive;
     }
 
     public void movePositionY(int speed){
@@ -99,11 +99,11 @@ public class StandardEnemyShip {
     }
 
     public void setIsAlive(boolean status){
-        this.isAlive = status;
+        this.alive = status;
     }
 
     public boolean getIsAlive(){
-        return this.isAlive;
+        return this.alive;
     }
 
     public int getPositionX(){
