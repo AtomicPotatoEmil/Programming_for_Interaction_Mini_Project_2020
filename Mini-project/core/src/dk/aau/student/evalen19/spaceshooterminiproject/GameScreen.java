@@ -97,7 +97,7 @@ public class GameScreen implements Screen {
         if (playerController.getAccelerationX() > -1){
             playerShip.movePositionX(-300);
         }
-        if (Gdx.input.justTouched()){
+        if (Gdx.input.justTouched() && playerShip.isAlive()){
             playerBullets.add(new PlayerBullet(playerShip.getPositionX() + 9, playerShip.getPositionY() + 40, 16, 16));
             playerBullets.add(new PlayerBullet(playerShip.getPositionX() + 40, playerShip.getPositionY() + 40, 16, 16));
         }
@@ -121,6 +121,10 @@ public class GameScreen implements Screen {
 
         for (StandardEnemyShip ship : standardEnemyShips){
             ship.movePositionY(-200);
+            if (ship.getHurtbox().overlaps(playerShip.getHurtbox())){
+                ship.setIsAlive(false);
+                playerShip.setAlive(false);
+            }
             if (ship.getPositionY() < -64){
                 standardEnemyShipsToRemove.add(ship);
                 ship.getStandardEnemyShipImage().dispose();
@@ -128,6 +132,7 @@ public class GameScreen implements Screen {
             }
             if (ship.isDespawned()){
                 standardEnemyShipsToRemove.add(ship);
+                ship.getStandardEnemyShipImage().dispose();
                 ship.getExplosionEffect().dispose();
             }
             ship.shootTimer();
