@@ -140,6 +140,7 @@ public class GameScreen implements Screen {
             if (ship.getHurtbox().overlaps(playerShip.getHurtbox())){
                 ship.setIsAlive(false);
                 playerShip.setAlive(false);
+                playerShip.despawnHurtbox();
             }
             if (ship.getPositionY() < -64){
                 standardEnemyShipsToRemove.add(ship);
@@ -167,6 +168,7 @@ public class GameScreen implements Screen {
                 bullet.getEnemyBulletImage().dispose();
                 enemyBulletsToRemove.add(bullet);
                 playerShip.setAlive(false);
+                playerShip.despawnHurtbox();
             }
         }
 
@@ -179,6 +181,7 @@ public class GameScreen implements Screen {
             }
             if (meteor.getCollisionbox().overlaps(playerShip.getHurtbox())){
                 playerShip.setAlive(false);
+                playerShip.despawnHurtbox();
             }
         }
 

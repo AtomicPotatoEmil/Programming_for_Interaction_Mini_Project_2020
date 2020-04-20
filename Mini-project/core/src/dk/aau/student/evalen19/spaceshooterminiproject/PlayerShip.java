@@ -61,6 +61,13 @@ public class PlayerShip {
         }
     }
 
+    public void despawnHurtbox(){
+        getHurtbox().x = 0;
+        getHurtbox().y = 0;
+        getHurtbox().width = 0;
+        getHurtbox().height = 0;
+    }
+
     public void drawPlayerShip(SpriteBatch batch){
         if (isAlive()){
             boostEffect.update(Gdx.graphics.getDeltaTime());
