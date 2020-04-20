@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
+import sun.font.TrueTypeFont;
 
 import java.util.ArrayList;
 
@@ -34,6 +37,11 @@ public class GameScreen implements Screen {
     private int meteorRightSpawnTime = MathUtils.random(1, 30);
     private int meteorLeftSpawnTime = MathUtils.random(1, 30);
 
+    BitmapFont scoreText;
+    FreeTypeFontGenerator fontGenerator;
+    FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
+    private int score = 0;
+
     public GameScreen(GameState gameState){
         this.gameState = gameState;
     }
@@ -59,6 +67,13 @@ public class GameScreen implements Screen {
 
         meteors = new ArrayList<Meteor>();
         meteorsToRemove = new ArrayList<Meteor>();
+
+        scoreText = new BitmapFont();
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Xolonium-Regular.ttf"));
+        fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.size = 32;
+        scoreText = fontGenerator.generateFont(fontParameter);
+        fontGenerator.dispose();
     }
 
     @Override
@@ -115,6 +130,7 @@ public class GameScreen implements Screen {
                     standardEnemy.getEnemyBoostEffect().dispose();
                     bullet.getPlayerBulletImage().dispose();
                     playerBulletsToRemove.add(bullet);
+                    score += 1;
                 }
             }
         }
@@ -188,6 +204,8 @@ public class GameScreen implements Screen {
             ship.drawStandardEnemyShip(batch);
         }
         playerShip.drawPlayerShip(batch);
+
+        scoreText.draw(batch, "Score: "+score, 20, 1050);
         batch.end();
     }
 
