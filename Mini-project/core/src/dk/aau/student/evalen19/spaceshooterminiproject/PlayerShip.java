@@ -113,4 +113,8 @@ public class PlayerShip {
     public boolean isAlive(){
         return this.alive;
     }
+
+    public ParticleEffect getDeathExplosion(){
+        return this.deathExplosion;
+    }
 }

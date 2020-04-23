@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
-import sun.font.TrueTypeFont;
 
 import java.util.ArrayList;
 
@@ -27,19 +26,19 @@ public class GameScreen implements Screen {
 
     private ArrayList<StandardEnemyShip> standardEnemyShips;
     private ArrayList<StandardEnemyShip> standardEnemyShipsToRemove;
-    private int standardEnemySpawnTime = MathUtils.random(1, 30);
+    private int standardEnemySpawnTime = 200;
 
     private ArrayList<EnemyBullet> enemyBullets;
     private ArrayList<EnemyBullet> enemyBulletsToRemove;
 
     private ArrayList<Meteor> meteors;
     private ArrayList<Meteor> meteorsToRemove;
-    private int meteorRightSpawnTime = MathUtils.random(1, 30);
-    private int meteorLeftSpawnTime = MathUtils.random(1, 30);
+    private int meteorRightSpawnTime = 200;
+    private int meteorLeftSpawnTime = 200;
 
-    BitmapFont scoreText;
-    FreeTypeFontGenerator fontGenerator;
-    FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
+    private BitmapFont scoreText;
+    private FreeTypeFontGenerator fontGenerator;
+    private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private int score = 0;
 
     public GameScreen(GameState gameState){
@@ -92,12 +91,12 @@ public class GameScreen implements Screen {
         meteorRightSpawnTime -= Gdx.graphics.getDeltaTime();
         if (meteorRightSpawnTime <= 0){
             meteors.add(new Meteor(-64, MathUtils.random(0, 1080 - 64), 64, 64, true));
-            meteorRightSpawnTime = MathUtils.random(150, 200);
+            meteorRightSpawnTime = MathUtils.random(150, 300);
         }
         meteorLeftSpawnTime -= Gdx.graphics.getDeltaTime();
         if (meteorLeftSpawnTime <= 0){
             meteors.add(new Meteor(1080 + 64, MathUtils.random(0, 1080 - 64), 64, 64, false));
-            meteorLeftSpawnTime = MathUtils.random(150, 200);
+            meteorLeftSpawnTime = MathUtils.random(150, 300);
         }
 
         if (playerController.getAccelerationZ() > 8){
@@ -210,6 +209,11 @@ public class GameScreen implements Screen {
 
         scoreText.draw(batch, "Score: "+score, 20, 1050);
         batch.end();
+
+        if (playerShip.getDeathExplosion().isComplete()){
+            gameState.setScreen(new StartScreen(gameState));
+            this.dispose();
+        }
     }
 
     @Override
