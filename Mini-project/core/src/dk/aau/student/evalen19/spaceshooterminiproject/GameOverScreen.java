@@ -68,13 +68,15 @@ public class GameOverScreen implements Screen {
 
         if (Gdx.input.justTouched()){
             gameState.setScreen(new GameScreen(gameState));
+            this.dispose();
         }
     }
 
 
     @Override
     public void dispose() {
-
+        text.dispose();
+        gameOverScreenImage.dispose();
     }
 
 
