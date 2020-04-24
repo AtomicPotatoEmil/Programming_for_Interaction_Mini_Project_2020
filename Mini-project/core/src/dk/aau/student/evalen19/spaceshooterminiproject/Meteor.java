@@ -19,7 +19,7 @@ public class Meteor {
     private int height;
 
     public Meteor(int x, int y, int width, int height, boolean isRight){
-        this.meteorImage = new Texture(Gdx.files.internal("Meteor.png"));
+        this.meteorImage = new Texture(Gdx.files.internal("Stone.png"));
         this.collisionbox = new Rectangle(x, y, width, height);
         this.flame = new ParticleEffect();
         flame.load(Gdx.files.internal("meteorFlame.p"), Gdx.files.internal(""));

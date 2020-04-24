@@ -1,6 +1,7 @@
 package dk.aau.student.evalen19.spaceshooterminiproject;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -36,10 +37,12 @@ public class GameScreen implements Screen {
     private int meteorRightSpawnTime = 200;
     private int meteorLeftSpawnTime = 200;
 
-    private BitmapFont scoreText;
+    private BitmapFont text;
     private FreeTypeFontGenerator fontGenerator;
     private FreeTypeFontGenerator.FreeTypeFontParameter fontParameter;
     private int score = 0;
+
+    private Preferences preferences;
 
     public GameScreen(GameState gameState){
         this.gameState = gameState;
@@ -67,12 +70,16 @@ public class GameScreen implements Screen {
         meteors = new ArrayList<Meteor>();
         meteorsToRemove = new ArrayList<Meteor>();
 
-        scoreText = new BitmapFont();
+        text = new BitmapFont();
         fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Xolonium-Regular.ttf"));
         fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.size = 32;
-        scoreText = fontGenerator.generateFont(fontParameter);
+        text = fontGenerator.generateFont(fontParameter);
         fontGenerator.dispose();
+
+        preferences = Gdx.app.getPreferences("ScoreSave");
+        preferences.putInteger("Score", 0);
+        preferences.flush();
     }
 
     @Override
@@ -130,7 +137,15 @@ public class GameScreen implements Screen {
                     bullet.getPlayerBulletImage().dispose();
                     playerBulletsToRemove.add(bullet);
                     score += 1;
+
+                    preferences.putInteger("Score", score);
+                    preferences.flush();
+
                 }
+            }
+            if (preferences.getInteger("Score", 0) > preferences.getInteger("Highscore", 0)){
+                preferences.putInteger("Highscore", score);
+                preferences.flush();
             }
         }
 
@@ -207,11 +222,11 @@ public class GameScreen implements Screen {
         }
         playerShip.drawPlayerShip(batch);
 
-        scoreText.draw(batch, "Score: "+score, 20, 1050);
+        text.draw(batch, "Score: "+score, 20, 1050);
         batch.end();
 
         if (playerShip.getDeathExplosion().isComplete()){
-            gameState.setScreen(new StartScreen(gameState));
+            gameState.setScreen(new GameOverScreen(gameState));
             this.dispose();
         }
     }
